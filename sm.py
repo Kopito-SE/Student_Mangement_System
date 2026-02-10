@@ -1,9 +1,9 @@
 import json
-from symtable import Class
-from typing import Dict,List
+from typing import Dict, List
+DATA_FILE = "students.json"
 
 class Student:
-    def __init__(self,student_id:int, name:str):
+    def __init__(self,student_id:str, name:str):
         self.student_id = student_id
         self.name = name
         self.subjects:Dict[str,float] = {}
@@ -43,5 +43,35 @@ class Student:
         s.subjects = data.get("subjects", {})
         return s
 
-class StudentMangement:
-    pass
+class StudentManager:
+    def __init__(self):
+        self.students:Dict[str,Student] = {}
+        self.load()
+
+    def add_student(self, student_id:str , name: str):
+        if student_id in self.students:
+            raise ValueError(f"Student ID {student_id} already exist")
+        self.students[student_id] = Student(student_id, name)
+        self.save()
+    def add_marks(self,student_id:str,subject:str,mark:float):
+        if student_id not in self.students:
+            raise KeyError("Student not found")
+
+        self.students[student_id].add_marks(subject,mark)
+        self.save()
+    def save(self):
+        #Save all students to JSON file
+        with open(DATA_FILE, "w") as f:
+            json.dump({sid: s.to_dict() for sid,s in self.students.items()}, f,indent=4)
+    def load(self):
+        #Load Students from JSON File
+        try:
+            with open(DATA_FILE, "r") as f:
+                data = json.load(f)
+                self.students = {sid:Student.from_dict(sd) for sid, sd in data.items()}
+        except FileNotFoundError:
+            self.students = {}
+    def list_students(self)-> List[Student]:
+        #Return all students as a list
+        return List(self.students.values())
+
