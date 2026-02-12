@@ -53,11 +53,11 @@ class StudentManager:
             raise ValueError(f"Student ID {student_id} already exist")
         self.students[student_id] = Student(student_id, name)
         self.save()
-    def add_marks(self,student_id:str,subject:str,mark:float):
+    def add_marks(self,student_id:str,subject:str,marks:float):
         if student_id not in self.students:
             raise KeyError("Student not found")
 
-        self.students[student_id].add_marks(subject,mark)
+        self.students[student_id].add_marks(subject,marks)
         self.save()
     def save(self):
         #Save all students to JSON file
@@ -74,4 +74,68 @@ class StudentManager:
     def list_students(self)-> List[Student]:
         #Return all students as a list
         return List(self.students.values())
+
+#----------MENU/USER INTERFACE---------
+def get_float(prompt:str) -> float:
+    '''Safely gets a float user input'''
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("❌ please enter a valid input")
+
+def menu():
+    manager = StudentManager()
+    while True:
+        print("====Student Management System===")
+        print("1:Add Student")
+        print("2:Add Subject And Marks")
+        print("3:View all Students")
+        print("4:Exit")
+
+        choice = int(input("Chose an Option :"))
+        if choice == 1:
+            student_id = input("Enter Student ID:")
+            name = input("Enter Student Name:")
+            try:
+                manager.add_student(student_id, name)
+                print("✅Student added successfully")
+            except ValueError as e:
+                print(f"❌ {e}")
+
+        elif choice == 2:
+            student_id = input("Enter Student ID:")
+            subject = input("Enter Subject name:")
+            marks = get_float("Enter marks (0-100):")
+            try:
+                manager.add_marks(student_id,subject,marks)
+                print("Marks Added Successfully")
+            except (KeyError,ValueError) as e:
+                print(f"❌ {e}")
+
+        elif choice == 3:
+            students = manager.list_students()
+            if not students:
+                print("No student Found")
+            for s in students:
+                print("*" * 40)
+                print(f"ID:{s.student_id}")
+                print(f"NAME:{s.name}")
+                print(f"SUBJECTS:{s.subjects}")
+                print(f"AVERAGE : {s.average():.2f}")
+                print(f"GRADE:{s.grade()}")
+
+        elif choice == 4:
+            print("Goodbye👋")
+            break
+        else:
+            print("❌ Invalid Choice . Try Again")
+
+
+if __name__ == "__main__":
+    menu()
+
+
+
+
 
