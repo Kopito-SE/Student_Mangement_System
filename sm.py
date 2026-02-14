@@ -93,17 +93,31 @@ def menu():
         print("3:View all Students")
         print("4:Exit")
 
-        choice = int(input("Chose an Option :"))
-        if choice == 1:
-            student_id = input("Enter Student ID:")
-            name = input("Enter Student Name:")
+        choice = input("Chose an Option :")
+        if choice == "1":
+            # Get valid student_id
+            while True:
+                student_id = input("Enter Student ID:")
+                if len(student_id) == 16:
+                    break
+                print("Invalid ID! Must be 16 characters")
+
+            # Get valid name
+            while True:
+                name = input("Enter Student Name:")
+                if len(name) > 0:  # Valid name (not empty)
+                    break
+                print("Name cannot be empty")
+
+            # Only reaches here if BOTH are valid
             try:
                 manager.add_student(student_id, name)
-                print("✅Student added successfully")
+                print(f"✅ {name} added successfully")
             except ValueError as e:
                 print(f"❌ {e}")
 
-        elif choice == 2:
+
+        elif choice == "2":
             student_id = input("Enter Student ID:")
             subject = input("Enter Subject name:")
             marks = get_float("Enter marks (0-100):")
@@ -113,7 +127,7 @@ def menu():
             except (KeyError,ValueError) as e:
                 print(f"❌ {e}")
 
-        elif choice == 3:
+        elif choice == "3":
             students = manager.list_students()
             if not students:
                 print("No student Found")
@@ -125,7 +139,7 @@ def menu():
                 print(f"AVERAGE : {s.average():.2f}")
                 print(f"GRADE:{s.grade()}")
 
-        elif choice == 4:
+        elif choice == "4":
             print("Goodbye👋")
             break
         else:
