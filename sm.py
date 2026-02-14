@@ -39,7 +39,11 @@ class Student:
         }
     @staticmethod
     def from_dict(data: dict) -> "Student" :
-        s = Student(data["student_id"],data["name"])
+        student_id = data.get("student_id") or data.get("student_Id")
+        if not student_id:
+            raise ValueError("Invalid student data format")
+
+        s=Student(student_id, data["name"])
         s.subjects = data.get("subjects", {})
         return s
 
@@ -73,7 +77,7 @@ class StudentManager:
             self.students = {}
     def list_students(self)-> List[Student]:
         #Return all students as a list
-        return List(self.students.values())
+        return list(self.students.values())
 
 #----------MENU/USER INTERFACE---------
 def get_float(prompt:str) -> float:
