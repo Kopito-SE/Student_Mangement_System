@@ -1,1 +1,34 @@
-
+{
+    "PA106/G/23873/24": {
+        "student_id": "PA106/G/23873/24",
+        "name": "Seth",
+        "subjects": {
+            "Seth": 90.0
+        }
+    },
+    "3": {
+        "student_id": "3",
+        "name": "7",
+        "subjects": {}
+    },
+    "rrrrrrrrrrrrrrrr": {
+        "student_id": "rrrrrrrrrrrrrrrr",
+        "name": "jim",
+        "subjects": {}
+    },
+    "PA110/G/23873/24": {
+        "student_id": "PA110/G/23873/24",
+        "name": "",
+        "subjects": {}
+    },
+    "PA100/G/23873/24": {
+        "student_id": "PA100/G/23873/24",
+        "name": "",
+        "subjects": {}
+    },
+    "PA101/G/23873/24": {
+        "student_id": "PA101/G/23873/24",
+        "name": "Kopito",
+        "subjects": {}
+    }
+}
