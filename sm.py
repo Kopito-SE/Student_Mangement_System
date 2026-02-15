@@ -8,11 +8,13 @@ class Student:
         self.name = name
         self.subjects:Dict[str,float] = {}
     def add_marks(self,subject:str,marks:float):
+        
         if not 0<= marks <=100:
             raise ValueError("Marks should exceed 0 but not more than 100")
         self.subjects[subject] = marks
 
     def average(self) -> float:
+
         if not self.subjects:
             return 0.0
         return sum(self.subjects.values()) / len(self.subjects)
@@ -39,12 +41,8 @@ class Student:
         }
     @staticmethod
     def from_dict(data: dict) -> "Student" :
-        student_id = data.get("student_id") or data.get("student_Id")
-        if not student_id:
-            raise ValueError("Invalid student data format")
-
-        s=Student(student_id, data["name"])
-        s.subjects = data.get("subjects", {})
+        s = Student(data["student_id"],data["name"])
+        s.subjects = data.get("subjects",{})
         return s
 
 class StudentManager:
@@ -78,6 +76,17 @@ class StudentManager:
     def list_students(self)-> List[Student]:
         #Return all students as a list
         return list(self.students.values())
+#---Delete and Search student by ID features--
+    def get_student(self,student_id:str)-> Student:
+        if student_id not in self.students:
+            raise KeyError(f"Student ID {student_id} not found")
+        return self.students[student_id]
+    def delete_student(self,student_id:str):
+        if student_id not in self.students:
+            raise KeyError("Student ID doesnt Exist")
+        del self.students[student_id]
+        self.save()
+
 
 #----------MENU/USER INTERFACE---------
 def get_float(prompt:str) -> float:
@@ -88,6 +97,21 @@ def get_float(prompt:str) -> float:
         except ValueError:
             print("❌ please enter a valid input")
 
+def display_student(s: Student):
+    print("*"* 40)
+    print(f"ID    : {s.student_id}")
+    print(f"NAME  : {s.name}")
+    print("SUBJECT")
+    if not s.subjects:
+        print("NONE")
+    else:
+        for subject, marks in s.subjects.items():
+            print(f"{subject:<15} : {marks}")
+    print(f"Average : {s.average():2f}")
+    print(f"Grade: {s.grade()}")
+    print("="* 40)
+
+
 def menu():
     manager = StudentManager()
     while True:
@@ -95,7 +119,9 @@ def menu():
         print("1:Add Student")
         print("2:Add Subject And Marks")
         print("3:View all Students")
-        print("4:Exit")
+        print("4:Search Student by ID")
+        print("5:Delete student")
+        print("6:Exit")
 
         choice = input("Chose an Option :")
         if choice == "1":
@@ -144,6 +170,23 @@ def menu():
                 print(f"GRADE:{s.grade()}")
 
         elif choice == "4":
+            student_id = input("Enter Student ID:")
+            try:
+                student= manager.get_student(student_id)
+                display_student(student)
+            except KeyError as e:
+                print(f"❌ {e}")
+
+        elif choice == "5":
+            student_id = input("Enter Student ID to Delete:")
+            try:
+                manager.delete_student(student_id)
+                print("Student Deleted Successfully")
+            except KeyError as e:
+                print(f"❌ {e}")
+
+
+        elif choice == "6":
             print("Goodbye👋")
             break
         else:
