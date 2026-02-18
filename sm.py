@@ -1,6 +1,16 @@
 import json
 from typing import Dict, List
 DATA_FILE = "students.json"
+SUBJECTS= [
+    "SAD",
+    "MIS",
+    "Web Tech",
+    "Client-Side",
+    "Prob & Stats"
+    "Calculus"
+    "DBMS"
+
+]
 
 class Student:
     def __init__(self,student_id:str, name:str):
@@ -8,7 +18,7 @@ class Student:
         self.name = name
         self.subjects:Dict[str,float] = {}
     def add_marks(self,subject:str,marks:float):
-        
+
         if not 0<= marks <=100:
             raise ValueError("Marks should exceed 0 but not more than 100")
         self.subjects[subject] = marks
@@ -149,13 +159,26 @@ def menu():
 
         elif choice == "2":
             student_id = input("Enter Student ID:")
-            subject = input("Enter Subject name:")
-            marks = get_float("Enter marks (0-100):")
             try:
-                manager.add_marks(student_id,subject,marks)
-                print("Marks Added Successfully")
-            except (KeyError,ValueError) as e:
-                print(f"❌ {e}")
+                student = manager.get_student(student_id)
+            except ValueError as e:
+                print(f"❌ , {e}")
+                continue
+            print("Enter marks for the Seven(7) subjects")
+            for  subject in SUBJECTS:
+                # Skip subject if already recorded
+                if subject in student.subjects:
+                    print(f"{subject} already recorded({student.subjects[subject]})")
+                    continue
+
+                marks = get_float(f"Enter {subject} marks (0-100):")
+                try:
+                    manager.add_marks(student_id, subject, marks)
+                except ValueError as e:
+                    print(f"❌ {e}")
+
+
+            print("Marks Entry complete")
 
         elif choice == "3":
             students = manager.list_students()
